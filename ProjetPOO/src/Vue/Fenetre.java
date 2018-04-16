@@ -16,6 +16,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Modele.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -157,7 +158,7 @@ public class Fenetre extends JFrame implements ActionListener, ItemListener {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent evt) {
-                System.exit(0); // tout fermer												System.exit(0); // tout fermer
+                System.exit(0); // tout fermer												
             }
         });
     }
@@ -437,5 +438,71 @@ public class Fenetre extends JFrame implements ActionListener, ItemListener {
             String nomTable = listeDeTables.getSelectedItem();
             afficherLignes(nomTable);
         }
+    }
+    
+    /** méthode qui retourne un tableau qui correspond à la requête
+     * 
+     * @param liste correspond à l'arraylist retourner par la méthode remplirChampsRequete de la classe connexion
+     * @return  un tableau de string qui va être utilisé pour afficher le tableau dans l'interface
+     */
+    public String [][] RechercheInfo(ArrayList<String> liste){
+        String[][] tab = new String[nbLignes(liste)][compteChampsColonne(liste)];
+        int i,j;
+        String listChamps;
+        
+        for (i=1;i<nbLignes(liste);i++){
+            listChamps=liste.get(i);
+            int a=0;
+            int b;
+            int z=listChamps.indexOf(",");
+            for(j=0;j<compteChampsColonne(liste);j++){
+                if (z==-1){
+                    tab[i][j] = listChamps.substring(a,listChamps.length());
+                }
+                else {
+                    b=z;
+                    tab[i][j] =listChamps.substring(a,b);
+                    a=b+1;
+                    z=listChamps.indexOf(",",a);
+                }
+            }
+        }
+        return tab;
+    }
+    
+    /** méthode qui compte le nombre de colonne dans le tableau de la requete pour la méthode rechercheInfo
+     * @param liste correspond à l'arraylist retourner par la méthode remplirChampsRequete de la classe connexion
+     * @return nombre de champs
+     */
+    public int compteChampsColonne(ArrayList<String> liste){
+        String champs;
+        int n=1; // nb de champs
+        int a;
+        champs=liste.get(0);
+        int z;
+        z=champs.indexOf(",");
+        
+        while(z!=-1){
+            a=z+1;
+            z=champs.indexOf(",",a);
+            n++;
+        }
+        return n;
+    }
+    
+    /** méthode qui compte le nombre de ligne du tableau pour la méthode rechercheInfo
+     * @param liste correspond à l'arraylist retourner par la méthode remplirChampsRequete de la classe connexion
+     * @return nombre de ligne
+     */
+    public int nbLignes(ArrayList<String> liste){
+        return liste.size();
+    }
+    
+    /** méthode qui renvoie le nom des champs de la requete
+     * @param liste correspond à l'arraylist retourner par la méthode remplirChampsRequete de la classe connexion
+     * @return tableau de String contenant les noms des champs
+     */
+    public String[] tabNomChamp(ArrayList<String> liste){
+        return new String[compteChampsColonne(liste)];
     }
 }
