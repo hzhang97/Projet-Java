@@ -1,0 +1,60 @@
+public class RechercheInfo {
+    
+    String[][] tab;
+    String[] nomChamp;
+    public RechercheInfo(ArrayList<String> liste){
+        tab = test(liste,tab);
+        nomChamp = tabNomChamp(liste);
+    }
+    
+    
+    public String[][] test(ArrayList<String> liste,String[][] tab){
+        //ArrayList<String> tab = new ArrayList<>();
+        int i,j;
+        tab= new String[nbLignes(liste)][compteChampsColonne(liste)];
+        String listChamps;
+        
+        
+        for (i=1;i<nbLignes(liste);i++){
+            listChamps=liste.get(i);
+            int a=0;
+            int b;
+            int z=listChamps.indexOf(",");
+            for(j=0;j<compteChampsColonne(liste);j++){
+                if (z==-1){
+                    tab[i][j] = listChamps.substring(a,listChamps.length());
+                }
+                else {
+                    b=z;
+                    tab[i][j] =listChamps.substring(a,b);
+                    a=b+1;
+                    z=listChamps.indexOf(",",a);
+                }
+            }
+        }
+        return tab;  
+    }
+    
+    public int compteChampsColonne(ArrayList<String> liste){
+        String champs;
+        int n=1; // nb de champs
+        int a;
+        champs=liste.get(0);
+        int z;
+        z=champs.indexOf(",");
+        
+        while(z!=-1){
+            a=z+1;
+            z=champs.indexOf(",",a);
+            n++;
+        }
+        return n;
+    }
+    public int nbLignes(ArrayList<String> liste){
+        return liste.size();
+    }
+    
+    public String[] tabNomChamp(ArrayList<String> liste){
+        return new String[compteChampsColonne(liste)];
+    }
+}
